@@ -1,0 +1,24 @@
+{
+	"name": "bigoen/azure-search",
+	"type": "php",
+	"description": "Azure search api for php applications.",
+	"license": "LGPL-3.0",
+	"authors": [
+		{
+			"name": "Şafak Saylam",
+			"homepage": "https://safaksaylam.com",
+			"email": "safak@bigoen.com"
+		}
+	],
+	"require": {
+		"php": ">=8.2",
+		"ext-json": "*",
+		"symfony/http-client": "^6.0"
+	},
+	"prefer-stable": true,
+	"autoload": {
+		"psr-4": {
+			"Bigoen\\AzureSearch\\": "src/"
+		}
+	}
+}
