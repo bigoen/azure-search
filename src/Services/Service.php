@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Bigoen\AzureSearch\Services;
 
 use Bigoen\AzureSearch\Model\Doc;
+use Bigoen\AzureSearch\Model\DocInput;
 use Bigoen\AzureSearch\Model\Error;
 use Bigoen\AzureSearch\Model\Index;
 use Bigoen\AzureSearch\Model\IndexSearch;
@@ -173,28 +174,30 @@ final class Service
      * @throws DecodingExceptionInterface
      * @throws ClientExceptionInterface
      */
-    public function addDocToIndex(string $name, array $value): array|Error
+    public function addDocToIndex(string $name, DocInput $input): array|Error
     {
         $data = $this->client
             ->withOptions($this->defaultOptions)
-            ->request(Request::METHOD_POST, "indexes/$name/docs/index", ['json' => ['value' => [$value]]])
+            ->request(Request::METHOD_POST, "indexes/$name/docs/index", ['json' => ['value' => [$input->toArray()]]])
             ->toArray(false);
 
         return $this->error($data) ?? array_map(fn (array $value) => Doc::fromArray($value), $data['value']);
     }
 
     /**
+     * @param  array<int, DocInput>  $inputs
+     *
      * @throws TransportExceptionInterface
      * @throws ServerExceptionInterface
      * @throws RedirectionExceptionInterface
      * @throws DecodingExceptionInterface
      * @throws ClientExceptionInterface
      */
-    public function addDocsToIndex(string $name, array $values): array|Error
+    public function addDocsToIndex(string $name, array $inputs): array|Error
     {
         $data = $this->client
             ->withOptions($this->defaultOptions)
-            ->request(Request::METHOD_POST, "indexes/$name/docs/index", ['json' => ['value' => $values]])
+            ->request(Request::METHOD_POST, "indexes/$name/docs/index", ['json' => ['value' => array_map(fn (DocInput $input) => $input->toArray(), $inputs)]])
             ->toArray(false);
 
         return $this->error($data) ?? array_map(fn (array $value) => Doc::fromArray($value), $data['value']);
